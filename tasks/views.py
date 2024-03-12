@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from ninja import Router
 
-# Create your views here.
+router = Router()
+
+
+class TaskSchema:
+    """Сущность задачи"""
+    ...
+
+
+@router.post('/')
+async def a():
+    pass
