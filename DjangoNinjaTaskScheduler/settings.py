@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ninja_jwt',
+    'ninja_extra',
     'tasks',
 ]
 
