@@ -2,6 +2,8 @@ from ninja import Router
 from ninja.params.functions import Query
 
 from users.entities.user_entity import UserInEntity, UserOutEntity, BaseUserEntity
+from users.filters.user_filters import UserFilter
+from users.ordering.user_ordering import UserOrderingEntity
 from users.services.user_service import UserService
 
 router = Router()
@@ -41,8 +43,10 @@ async def delete(request, user_id: int) -> dict:
 async def list(
         request,
         skip: int = Query(ge=0, default=0),
-        limit: int = Query(ge=0, default=50)
+        limit: int = Query(ge=0, default=50),
+        filters: UserFilter = Query(default=None),
+        ordering: UserOrderingEntity = Query(default=None),
 ):
     """Получение списка пользователей"""
-    users = await user_service.list(skip=skip, limit=limit)
+    users = await user_service.list(skip=skip, limit=limit, filters=filters, ordering=ordering)
     return users

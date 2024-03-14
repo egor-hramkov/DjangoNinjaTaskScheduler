@@ -6,6 +6,8 @@ from django.shortcuts import aget_object_or_404
 
 from users.exceptions.user_exceptions import UserDoesNotExistException
 from users.entities.user_entity import UserInEntity, BaseUserEntity
+from users.filters.user_filters import UserFilter
+from users.ordering.user_ordering import UserOrderingEntity
 
 
 class UserRepository:
@@ -44,7 +46,18 @@ class UserRepository:
         user = await aget_object_or_404(User, pk=user_id)
         await user.adelete()
 
-    async def list(self, skip: int = 0, limit: int = 50):
+    async def list(
+            self,
+            skip: int = 0,
+            limit: int = 50,
+            filters: UserFilter = None,
+            ordering: UserOrderingEntity = None
+    ):
         """Получение списка пользователей"""
-        users = await sync_to_async(list)(self.user_model.objects.all()[skip:limit])
+        qs = self.user_model.objects.all()
+        if filters:
+            qs = filters.filter(qs)
+        if ordering:
+            qs = ordering.order(qs)
+        users = await sync_to_async(list)(qs[skip:limit])
         return users

@@ -1,4 +1,6 @@
 from users.entities.user_entity import UserInEntity, BaseUserEntity
+from users.filters.user_filters import UserFilter
+from users.ordering.user_ordering import UserOrderingEntity
 from users.repositories.user_repository import UserRepository
 
 
@@ -25,7 +27,13 @@ class UserService:
         """Удаление пользователя"""
         await self._repository.delete(user_id)
 
-    async def list(self, skip: int = 0, limit: int = 50):
+    async def list(
+            self,
+            skip: int = 0,
+            limit: int = 50,
+            filters: UserFilter = None,
+            ordering: UserOrderingEntity = None
+    ):
         """Получение списка пользователя"""
-        users = await self._repository.list(skip=skip, limit=limit)
+        users = await self._repository.list(skip=skip, limit=limit, filters=filters, ordering=ordering)
         return users
