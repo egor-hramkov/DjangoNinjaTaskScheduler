@@ -1,6 +1,6 @@
 from django.db import models
 
-from tasks.enums.TaskStatuses import TaskStatuses
+from tasks.enums.task_statuses import TaskStatuses
 
 
 class Task(models.Model):
