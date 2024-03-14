@@ -1,6 +1,6 @@
 from users.entities.user_entity import UserInEntity, BaseUserEntity
 from users.filters.user_filters import UserFilter
-from users.ordering.user_ordering import UserOrderingEntity
+from users.filters.user_ordering import UserOrderingEntity
 from users.repositories.user_repository import UserRepository
 
 

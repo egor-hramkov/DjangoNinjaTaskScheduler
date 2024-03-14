@@ -3,7 +3,7 @@ from ninja.params.functions import Query
 
 from users.entities.user_entity import UserInEntity, UserOutEntity, BaseUserEntity
 from users.filters.user_filters import UserFilter
-from users.ordering.user_ordering import UserOrderingEntity
+from users.filters.user_ordering import UserOrderingEntity
 from users.services.user_service import UserService
 
 router = Router()

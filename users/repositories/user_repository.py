@@ -4,44 +4,46 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.shortcuts import aget_object_or_404
 
+from users.domain.repository.abstract_user_repository import AbstractUserRepository
 from users.exceptions.user_exceptions import UserDoesNotExistException
-from users.entities.user_entity import UserInEntity, BaseUserEntity
+from users.entities.user_entity import UserInEntity, BaseUserEntity, UserOutEntity
 from users.filters.user_filters import UserFilter
-from users.ordering.user_ordering import UserOrderingEntity
+from users.filters.user_ordering import UserOrderingEntity
 
 
-class UserRepository:
+class UserRepository(AbstractUserRepository):
     """Репозиторий пользователей"""
     user_model: User = get_user_model()
 
-    async def create(self, user_data: UserInEntity):
+    async def create(self, user_data: UserInEntity) -> UserOutEntity:
+        """Создание пользователя"""
         hashed_password = make_password(user_data.password)
-        user = await self.user_model.objects.acreate(
+        user: User = await self.user_model.objects.acreate(
             first_name=user_data.first_name,
             last_name=user_data.last_name,
             username=user_data.username,
             password=hashed_password,
             email=user_data.email,
         )
-        return user
+        return UserOutEntity.model_validate(user, from_attributes=True)
 
-    async def get(self, user_id: int):
+    async def get(self, user_id: int) -> UserOutEntity:
         """Получение пользователя"""
         try:
             user = await self.user_model.objects.aget(pk=user_id)
         except User.DoesNotExist:
             raise UserDoesNotExistException
-        return user
+        return UserOutEntity.model_validate(user, from_attributes=True)
 
-    async def update(self, user_id: int, user_data: BaseUserEntity):
+    async def update(self, user_id: int, user_data: BaseUserEntity) -> UserOutEntity:
         """Обновление пользователя"""
         user = await aget_object_or_404(User, pk=user_id)
         for attr, value in user_data.dict().items():
             setattr(user, attr, value)
         await user.asave()
-        return user
+        return UserOutEntity.model_validate(user, from_attributes=True)
 
-    async def delete(self, user_id: int):
+    async def delete(self, user_id: int) -> None:
         """Удаление пользователя"""
         user = await aget_object_or_404(User, pk=user_id)
         await user.adelete()
@@ -52,7 +54,7 @@ class UserRepository:
             limit: int = 50,
             filters: UserFilter = None,
             ordering: UserOrderingEntity = None
-    ):
+    ) -> list[UserOutEntity]:
         """Получение списка пользователей"""
         qs = self.user_model.objects.all()
         if filters:
@@ -60,4 +62,4 @@ class UserRepository:
         if ordering:
             qs = ordering.order(qs)
         users = await sync_to_async(list)(qs[skip:limit])
-        return users
+        return [UserOutEntity.model_validate(user, from_attributes=True) for user in users]

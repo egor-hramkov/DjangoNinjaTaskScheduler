@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from ninja import ModelSchema
 from pydantic import EmailStr
 
-from users.domain.entities.user_entity import AbstractUserInEntity, AbstractUserOutEntity, AbstractBaseUserEntity
+from users.domain.entities.abstract_user_entity import AbstractUserInEntity, AbstractUserOutEntity, AbstractBaseUserEntity
 
 
 class BaseUserEntity(ModelSchema, AbstractBaseUserEntity):
