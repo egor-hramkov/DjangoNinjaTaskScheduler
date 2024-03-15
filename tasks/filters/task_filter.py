@@ -2,13 +2,13 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-from django.db.models import QuerySet, Q
+from django.db.models import Q
 from ninja import FilterSchema, Query
 
 from tasks.exceptions.task_filter_exceptions import TaskWrongConditionException, TaskWrongDateException
 
-
 logger = logging.getLogger(__name__)
+
 
 class TaskFilter(FilterSchema):
     """Поля для фильтрации списка задач"""
@@ -21,9 +21,10 @@ class TaskFilter(FilterSchema):
         description="Фильтрация по времени создания, поддерживает gt,gte,lte,lt,eq. For example: lt__15.03.24-13:30",
     )
     name: Optional[str] = None
-    status: Optional[str] = None
-
-    # user_id: Optional[int] = None
+    status: Optional[str] = Query(
+        default=None,
+        description="Allowed statuses: 'created', 'active', 'done'",
+    )
 
     def custom_expression(self) -> Q:
         """Кастомное выражение для фильтрации задач"""

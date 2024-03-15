@@ -10,3 +10,7 @@ class TaskStatuses(Enum):
     @classmethod
     def choices(cls):
         return tuple((i.value, i.name) for i in cls)
+
+    @classmethod
+    def for_docs(cls):
+        return ', '.join(i.name for i in cls)
