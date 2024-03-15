@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Optional
 
@@ -6,6 +7,8 @@ from ninja import FilterSchema, Query
 
 from tasks.exceptions.task_filter_exceptions import TaskWrongConditionException, TaskWrongDateException
 
+
+logger = logging.getLogger(__name__)
 
 class TaskFilter(FilterSchema):
     """Поля для фильтрации списка задач"""
@@ -53,7 +56,10 @@ class TaskFilter(FilterSchema):
                 }
                 q &= updated_conditions[condition]
         except KeyError:
+            logger.error(f"Передан неверный ключ для фильтрации по времени"
+                         f"{self.created_at=}, {self.updated_at=}, {condition=}, {datetime_object=} ")
             raise TaskWrongConditionException
         except ValueError:
+            logger.error(f"Передана неверная дата для фильтрации задач {self.created_at=}, {self.updated_at=}")
             raise TaskWrongDateException
         return q
