@@ -7,3 +7,6 @@ class AbstractTaskFilter(ABC):
     updated_at: str
     name: str
     status: str
+
+    def custom_expression(self):
+        raise NotImplementedError
