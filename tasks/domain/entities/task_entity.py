@@ -5,6 +5,3 @@ class AbstractTaskSchema(ABC):
     """Абстрактная сущность задачи"""
     ...
 
-    @abstractmethod
-    def do(self):
-        raise NotImplementedError
