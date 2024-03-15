@@ -4,10 +4,12 @@ from django.core.exceptions import FieldError
 from django.db.models import QuerySet
 from ninja import Schema, Query
 
+from tasks.domain.entities.abstract_task_ordering import AbstractTaskOrderingEntity
+
 logger = logging.getLogger(__name__)
 
 
-class TaskOrderingEntity(Schema):
+class TaskOrderingEntity(Schema, AbstractTaskOrderingEntity):
     """Класс для поля сортировки задач"""
     ordering_field: str = Query(default=None, description="Any model field, for example: id or -id(for desc sorting)")
 

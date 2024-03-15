@@ -1,13 +1,14 @@
 from asgiref.sync import sync_to_async
 from django.shortcuts import aget_object_or_404
 
+from tasks.domain.repositories.abstract_task_repository import AbstractTaskRepository
 from tasks.entities.task_entity import TaskInEntity, TaskOutEntity, TaskWithoutUserEntity
 from tasks.filters.task_filter import TaskFilter
 from tasks.filters.task_ordering import TaskOrderingEntity
 from tasks.models import Task
 
 
-class TaskRepository:
+class TaskRepository(AbstractTaskRepository):
     """Репозиторий Задач"""
 
     async def create(self, user_id: int, task_data: TaskInEntity) -> TaskOutEntity:

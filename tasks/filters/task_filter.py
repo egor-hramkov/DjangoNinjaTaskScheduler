@@ -5,12 +5,13 @@ from typing import Optional
 from django.db.models import Q
 from ninja import FilterSchema, Query
 
+from tasks.domain.entities.abstract_task_filter import AbstractTaskFilter
 from tasks.exceptions.task_filter_exceptions import TaskWrongConditionException, TaskWrongDateException
 
 logger = logging.getLogger(__name__)
 
 
-class TaskFilter(FilterSchema):
+class TaskFilter(FilterSchema, AbstractTaskFilter):
     """Поля для фильтрации списка задач"""
     created_at: Optional[str] = Query(
         default=None,
