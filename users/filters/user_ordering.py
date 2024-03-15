@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import FieldError
 from django.db.models import QuerySet
-from ninja import Schema
+from ninja import Schema, Query
 
 from users.domain.entities.abstract_user_ordering import AbstractUserOrderingEntity
 
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class UserOrderingEntity(Schema, AbstractUserOrderingEntity):
     """Класс для поля сортировки пользователя"""
-    ordering_field: str = None
+    ordering_field: str = Query(default=None, description="Any model field, for example: id or -id(for desc sorting)")
 
     def order(self, qs: QuerySet) -> QuerySet:
         """Выполняет сортировку в QuerySet"""
