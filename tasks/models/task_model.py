@@ -19,4 +19,4 @@ class Task(CreatedAndUpdatedAbstractModel):
     )
 
     def __str__(self):
-        return f"<{self.id}>: {self.name}. АВТОР: f{self.user.username}"
+        return f"<{self.id}>: {self.name}. АВТОР: {self.user.username}"
