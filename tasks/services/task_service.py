@@ -1,5 +1,6 @@
 from tasks.entities.task_entity import TaskInEntity, TaskOutEntity, TaskWithoutUserEntity
 from tasks.filters.task_filter import TaskFilter
+from tasks.filters.task_ordering import TaskOrderingEntity
 from tasks.repositories.task_repository import TaskRepository
 
 
@@ -32,8 +33,8 @@ class TaskService:
             skip: int = 0,
             limit: int = 50,
             filters: TaskFilter = None,
-            #ordering: UserOrderingEntity = None
+            ordering: TaskOrderingEntity = None
     ) -> list[TaskWithoutUserEntity]:
         """Получение списка пользователя"""
-        tasks = await self._repository.list(user_id=user_id, skip=skip, limit=limit, filters=filters)
+        tasks = await self._repository.list(user_id=user_id, skip=skip, limit=limit, filters=filters, ordering=ordering)
         return tasks

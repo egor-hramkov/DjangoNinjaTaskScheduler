@@ -12,8 +12,14 @@ logger = logging.getLogger(__name__)
 
 class TaskFilter(FilterSchema):
     """Поля для фильтрации списка задач"""
-    created_at: Optional[str] = Query(default=None, example="lt__15.03.24-13:30")
-    updated_at: Optional[str] = Query(default=None, example="gt__15.03.24-13:30")
+    created_at: Optional[str] = Query(
+        default=None,
+        description="Фильтрация по времени создания, поддерживает gt,gte,lte,lt,eq. For example: lt__15.03.24-13:30",
+    )
+    updated_at: Optional[str] = Query(
+        default=None,
+        description="Фильтрация по времени создания, поддерживает gt,gte,lte,lt,eq. For example: lt__15.03.24-13:30",
+    )
     name: Optional[str] = None
     status: Optional[str] = None
 

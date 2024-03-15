@@ -3,6 +3,7 @@ from ninja.params.functions import Query
 
 from tasks.entities.task_entity import TaskInEntity, TaskOutEntity, TaskWithoutUserEntity
 from tasks.filters.task_filter import TaskFilter
+from tasks.filters.task_ordering import TaskOrderingEntity
 from tasks.services.task_service import TaskService
 
 router = Router()
@@ -45,9 +46,9 @@ async def list(
         skip: int = Query(ge=0, default=0),
         limit: int = Query(ge=0, default=50),
         filters: TaskFilter = Query(default=None),
-        # ordering: int = 1,
+        ordering: TaskOrderingEntity = Query(default=None),
 ):
     """Получение списка пользователей"""
     user_id = request.user.id
-    tasks = await task_service.list(user_id=user_id, skip=skip, limit=limit, filters=filters)
+    tasks = await task_service.list(user_id=user_id, skip=skip, limit=limit, filters=filters, ordering=ordering)
     return tasks
