@@ -44,7 +44,7 @@ class TaskFilter(FilterSchema, AbstractTaskFilter):
                 created_conditions = {
                     'gt': Q(created_at__gt=datetime_object),
                     'gte': Q(created_at__gte=datetime_object),
-                    'le': Q(created_at__le=datetime_object),
+                    'lt': Q(created_at__lt=datetime_object),
                     'lte': Q(created_at__lte=datetime_object),
                     'eq': Q(created_at__eq=datetime_object),
                     'neq': Q(created_at__neq=datetime_object),
@@ -57,7 +57,7 @@ class TaskFilter(FilterSchema, AbstractTaskFilter):
                 updated_conditions = {
                     'gt': Q(updated_at__gt=datetime_object),
                     'gte': Q(updated_at__gte=datetime_object),
-                    'le': Q(updated_at__le=datetime_object),
+                    'lt': Q(updated_at__lt=datetime_object),
                     'lte': Q(updated_at__lte=datetime_object),
                     'eq': Q(updated_at__eq=datetime_object),
                     'neq': Q(updated_at__neq=datetime_object),

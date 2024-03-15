@@ -15,6 +15,8 @@ class TaskOrderingEntity(Schema, AbstractTaskOrderingEntity):
 
     def order(self, qs: QuerySet) -> QuerySet:
         """Выполняет сортировку в QuerySet"""
+        if self.ordering_field is None:
+            return qs
         try:
             qs = qs.order_by(self.ordering_field)
         except FieldError:
