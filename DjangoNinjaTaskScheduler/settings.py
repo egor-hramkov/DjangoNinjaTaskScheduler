@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'ninja_jwt',
     'ninja_extra',
     'tasks',
+    'users',
 ]
 
 MIDDLEWARE = [
