@@ -2,10 +2,45 @@ version: '3.4'
 name: task-scheduler
 services:
   
-#  rabbitmq:
-#    image: rabbitmq:3.10.7-management
-#    ports:
-#      - 15672:15672
+
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "django_ninja_task_scheduler"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "python"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d django_ninja_task_scheduler" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    command: sh -c "python manage.py migrate &&
+      uvicorn DjangoNinjaTaskScheduler.asgi:application --host 0.0.0.0 --port 80 --reload"
+    ports:
+      - '8000:80'
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - postgres
+
+  #  rabbitmq:
+  #    image: rabbitmq:3.10.7-management
+  #    ports:
+  #      - 15672:15672
 
   redis:
     image: redis
@@ -17,3 +52,6 @@ services:
     ports:
       - 6379:6379
     command: redis-server /usr/local/etc/redis/redis.conf
+
+volumes:
+  data:

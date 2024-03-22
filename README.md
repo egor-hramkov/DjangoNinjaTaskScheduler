@@ -7,5 +7,6 @@ uvicorn DjangoNinjaTaskScheduler.asgi:application --reload
 
 
 # docker
+- copy .env.example to .env.docker
 - cd docker
 - docker compose up -d
