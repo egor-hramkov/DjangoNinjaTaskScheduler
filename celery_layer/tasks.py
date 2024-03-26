@@ -1,10 +1,13 @@
 import smtplib
 from email.message import EmailMessage
-from smtp_settings.smtp_config import SMTP_CONFIG
+
+from other_settings.redis_settings.redis_config import REDIS_CONFIG
+from other_settings.smtp_settings.smtp_config import SMTP_CONFIG
 
 from celery import Celery
 
-celery = Celery('tasks', broker='redis://localhost')
+redis_url = f'redis://{REDIS_CONFIG["REDIS_HOST"]}'
+celery = Celery('tasks', broker=redis_url)
 
 
 def get_email_template_dashboard(user_email: str, task_name: str):
