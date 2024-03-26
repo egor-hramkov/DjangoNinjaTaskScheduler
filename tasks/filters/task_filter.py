@@ -27,6 +27,28 @@ class TaskFilter(FilterSchema, AbstractTaskFilter):
         description="Allowed statuses: 'created', 'active', 'done'",
     )
 
+    @staticmethod
+    def get_created_at_conditions(datetime_object: datetime) -> dict:
+        return {
+            'gt': Q(created_at__gt=datetime_object),
+            'gte': Q(created_at__gte=datetime_object),
+            'lt': Q(created_at__lt=datetime_object),
+            'lte': Q(created_at__lte=datetime_object),
+            'eq': Q(created_at__eq=datetime_object),
+            'neq': Q(created_at__neq=datetime_object),
+        }
+
+    @staticmethod
+    def get_updated_at_conditions(datetime_object: datetime) -> dict:
+        return {
+            'gt': Q(updated_at__gt=datetime_object),
+            'gte': Q(updated_at__gte=datetime_object),
+            'lt': Q(updated_at__lt=datetime_object),
+            'lte': Q(updated_at__lte=datetime_object),
+            'eq': Q(updated_at__eq=datetime_object),
+            'neq': Q(updated_at__neq=datetime_object),
+        }
+
     def custom_expression(self) -> Q:
         """Кастомное выражение для фильтрации задач"""
         q = Q()
@@ -41,27 +63,13 @@ class TaskFilter(FilterSchema, AbstractTaskFilter):
             if self.created_at:
                 condition, datetime_obj = self.created_at.split('__')
                 datetime_object = datetime.strptime(datetime_obj, '%d.%m.%y-%H:%M')
-                created_conditions = {
-                    'gt': Q(created_at__gt=datetime_object),
-                    'gte': Q(created_at__gte=datetime_object),
-                    'lt': Q(created_at__lt=datetime_object),
-                    'lte': Q(created_at__lte=datetime_object),
-                    'eq': Q(created_at__eq=datetime_object),
-                    'neq': Q(created_at__neq=datetime_object),
-                }
+                created_conditions = self.get_created_at_conditions(datetime_object)
                 q &= created_conditions[condition]
 
             if self.updated_at:
                 condition, datetime_obj = self.updated_at.split('__')
                 datetime_object = datetime.strptime(datetime_obj, '%d.%m.%y-%H:%M')
-                updated_conditions = {
-                    'gt': Q(updated_at__gt=datetime_object),
-                    'gte': Q(updated_at__gte=datetime_object),
-                    'lt': Q(updated_at__lt=datetime_object),
-                    'lte': Q(updated_at__lte=datetime_object),
-                    'eq': Q(updated_at__eq=datetime_object),
-                    'neq': Q(updated_at__neq=datetime_object),
-                }
+                updated_conditions = self.get_updated_at_conditions(datetime_object)
                 q &= updated_conditions[condition]
         except KeyError:
             logger.error(f"Передан неверный ключ для фильтрации по времени"
