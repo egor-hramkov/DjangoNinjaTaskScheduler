@@ -1,7 +1,6 @@
 version: '3.4'
 name: task-scheduler
 services:
-  
 
   postgres:
     image: postgres:13.3
@@ -52,6 +51,28 @@ services:
     ports:
       - 6379:6379
     command: redis-server /usr/local/etc/redis/redis.conf
+
+  celery_worker:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    command: sh -c "celery -A celery_layer.tasks worker --loglevel=INFO --pool=solo"
+    depends_on:
+      - redis
+      - postgres
+
+  flower:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    command: sh -c "pwd && ls && celery -A celery_layer.tasks flower"
+    working_dir: /app
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - postgres
+      - celery_worker
 
 volumes:
   data:

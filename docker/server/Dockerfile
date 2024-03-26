@@ -11,5 +11,5 @@ COPY . /app/
 COPY .env.docker .env
 RUN export PYTHONPATH=$PWD
 
-CMD ["python", "manage.py", "migrate"]
-CMD ["uvicorn", "DjangoNinjaTaskScheduler.asgi:application", "--host", "0.0.0.0", "--port", "80", "--reload"]
+#CMD ["python", "manage.py", "migrate"]
+#CMD ["uvicorn", "DjangoNinjaTaskScheduler.asgi:application", "--host", "0.0.0.0", "--port", "80", "--reload"]
